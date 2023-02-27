@@ -2,6 +2,7 @@ import os
 import time
 import json
 import random
+import math
 
 import logging
 log = logging.getLogger(__name__)
@@ -284,7 +285,7 @@ class OSM_IMPORT():
 						if minH < 0 :
 							minH = 0
 						maxH = self.defaultHeight + self.randomHeightThreshold
-						offset = random.randint(minH, maxH)
+						offset = random.randint(math.floor(minH), math.ceil(maxH))
 
 					#Extrude
 					"""
