@@ -13,16 +13,17 @@ TIMEOUT = 2
 
 def nominatimQuery(
     query,
-    base_url = 'https://nominatim.openstreetmap.org/',
+    base_url = 'https://restapi.amap.com/v3/geocode/geo?',
     referer = None,
-    user_agent = None,
-    format = 'json',
+    user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36",
+    format = 'JSON',
     limit = 10):
 
-    url = base_url + 'search?'
-    url += 'format=' + format
-    url += '&q=' + quote_plus(query)
-    url += '&limit=' + str(limit)
+    # url = base_url + 'search?'
+    url = base_url + 'key=6a5c612bf543701c5ebbfde318830722'
+    url += '&format=' + format
+    url += '&address=' + quote_plus(query)
+    # url += '&limit=' + str(limit)
 
     log.debug('Nominatim search request : {}'.format(url))
 

@@ -1003,16 +1003,17 @@ class VIEW3D_OT_map_search(bpy.types.Operator):
 		geoscn = GeoScene(context.scene)
 		prefs = context.preferences.addons[PKG].preferences
 		try:
-			results = nominatimQuery(self.query, referer='bgis', user_agent=USER_AGENT)
+			results = nominatimQuery(self.query, referer='bgis8567', user_agent=USER_AGENT)
 		except Exception as e:
 			log.error('Failed Nominatim query', exc_info=True)
 			return {'CANCELLED'}
 		if len(results) == 0:
 			return {'CANCELLED'}
 		else:
-			log.debug('Nominatim search results : {}'.format([r['display_name'] for r in results]))
-			result = results[0]
-			lat, lon = float(result['lat']), float(result['lon'])
+			log.debug('Nominatim search results : {}'.format([r['formatted_address'] for r in results["geocodes"]]))
+			result = results["geocodes"][0]["location"]
+			result = result.split(",")
+			lat, lon = float(result[1]),float(result[0])
 			if geoscn.isGeoref:
 				geoscn.updOriginGeo(lon, lat, updObjLoc=prefs.lockObj)
 			else:
