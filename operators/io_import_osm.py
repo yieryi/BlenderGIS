@@ -156,7 +156,7 @@ class OSM_IMPORT():
 	separate: BoolProperty(name='Separate objects', description='Warning : can be very slow with lot of features', default=False)
 
 	buildingsExtrusion: BoolProperty(name='Buildings extrusion', description='', default=True)
-	defaultHeight: FloatProperty(name='Default Height', description='Set the height value using for extrude building when the tag is missing', default=20)
+	defaultHeight: FloatProperty(name='Default Height', description='Set the height value using for extrude building when the tag is missing', default=3.5)
 	levelHeight: FloatProperty(name='Level height', description='Set a height for a building level, using for compute extrude height based on number of levels', default=3)
 	randomHeightThreshold: FloatProperty(name='Random height threshold', description='Threshold value for randomize default height', default=0)
 
@@ -256,6 +256,7 @@ class OSM_IMPORT():
 				if face.normal.z < 0:
 					face.normal_flip()
 
+				height=-1
 				if self.buildingsExtrusion and any(tag in closedWaysAreExtruded for tag in tags):
 					offset = None
 					if "height" in tags:
@@ -276,7 +277,11 @@ class OSM_IMPORT():
 												offset = None
 					elif "building:levels" in tags:
 						try:
-							offset = int(tags["building:levels"]) * self.levelHeight
+							level = int(tags["building:levels"])
+							offset = level * self.levelHeight
+							levelLayer = bm.verts.layers.float.new("level")
+							for v in bm.verts:
+								v[levelLayer] = level
 						except ValueError as e:
 							offset = None
 
@@ -286,6 +291,13 @@ class OSM_IMPORT():
 							minH = 0
 						maxH = self.defaultHeight + self.randomHeightThreshold
 						offset = random.randint(math.floor(minH), math.ceil(maxH))
+
+					height = offset
+					heightLayer = bm.verts.layers.float.new("height")
+					# heightLayer = bm.vertex_layers_float.new(name="height")
+
+					for v in bm.verts:
+						v[heightLayer] = height	
 
 					#Extrude
 					"""
