@@ -49,6 +49,8 @@ from ..prefs import PredefCRS
 from .utils import getBBOX, mouseTo3d
 from .utils import placeObj, adjust3Dview, showTextures, rasterExtentToMesh, geoRastUVmap, addTexture #for export to mesh tool
 
+from .coord_transform_utils import gcj02_to_wgs84
+
 #OSM Nominatim API module
 #https://github.com/damianbraun/nominatim
 from .lib.osm.nominatim import nominatimQuery
@@ -1013,7 +1015,12 @@ class VIEW3D_OT_map_search(bpy.types.Operator):
 			log.debug('wangkang customed Gaode geocode search results : {}'.format([r['formatted_address'] for r in results["geocodes"]]))
 			result = results["geocodes"][0]["location"]
 			result = result.split(",")
+			log.debug('center origin gaode: {}'.format(result))
+
 			lat, lon = float(result[1]),float(result[0])
+			[lon84,lat84] = gcj02_to_wgs84(lon,lat)
+			log.debug('center origin WGS84: {} , {}'.format(lon84,lat84))
+
 			if geoscn.isGeoref:
 				geoscn.updOriginGeo(lon, lat, updObjLoc=prefs.lockObj)
 			else:

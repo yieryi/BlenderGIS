@@ -59,6 +59,6 @@ def gcj02_to_wgs84(lng, lat):
     return [lng * 2 - mglng, lat * 2 - mglat]
 
 
-[lon,lat]=gcj02_to_wgs84(116.964356,33.646373)
-print(lon)
-print(lat)
+# [lon,lat]=gcj02_to_wgs84(116.964356,33.646373)
+# print(lon)
+# print(lat)
